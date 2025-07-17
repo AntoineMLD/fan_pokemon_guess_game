@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/pokemon.dart';
 import '../services/pokemon_service.dart';
+import 'duo_guess_screen.dart';
 
 class DuoPokemonSelectionScreen extends StatefulWidget {
   final String player1;
@@ -40,7 +41,19 @@ class _DuoPokemonSelectionScreenState extends State<DuoPokemonSelectionScreen> {
   }
 
   void _choosePokemon(Pokemon chosen) {
-    // TODO: Naviguer vers l'écran de devinette avec le Pokémon choisi
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => DuoGuessScreen(
+          player1: widget.player1,
+          player2: widget.player2,
+          score1: widget.score1,
+          score2: widget.score2,
+          isPlayer1Choosing: widget.isPlayer1Choosing,
+          pokemonToGuess: chosen,
+        ),
+      ),
+    );
   }
 
   @override
