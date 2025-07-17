@@ -2,9 +2,34 @@
 
 **Jeu de devinette Pokémon réalisé en Flutter**
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.0+-blue.svg)](https://flutter.dev/)
-[![Dart](https://img.shields.io/badge/Dart-3.0+-blue.svg)](https://dart.dev/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+---
+
+## 🖼️ Aperçu en images
+
+<p align="center">
+  <img src="media/acceuill.png" alt="Accueil" width="300"/>
+  <br/><em>Accueil de l'application</em>
+</p>
+
+<p align="center">
+  <img src="media/mode_solo.png" alt="Mode Solo" width="300"/>
+  <br/><em>Mode Solo : devinez le Pokémon</em>
+</p>
+
+<p align="center">
+  <img src="media/mode_duo.png" alt="Mode Duo" width="300"/>
+  <br/><em>Mode Duo : saisie des joueurs</em>
+</p>
+
+<p align="center">
+  <img src="media/choix_pok_duo.png" alt="Choix Pokémon Duo" width="300"/>
+  <br/><em>Sélection de 50 Pokémon aléatoires en mode Duo</em>
+</p>
+
+<p align="center">
+  <img src="media/resultat.png" alt="Résultat" width="300"/>
+  <br/><em>Écran de résultat et indices détaillés</em>
+</p>
 
 ---
 
