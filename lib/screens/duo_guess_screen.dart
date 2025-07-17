@@ -53,10 +53,11 @@ class _DuoGuessScreenState extends State<DuoGuessScreen> {
     } else {
       setState(() {
         _attempts += 1;
-        _errorMessage = "❌ Mauvaise réponse ! Essaie encore.";
         if (_attempts >= _maxAttempts) {
           _finished = true;
           _found = false;
+        } else {
+          _errorMessage = "❌ Mauvaise réponse ! Essaie encore.";
         }
       });
     }
