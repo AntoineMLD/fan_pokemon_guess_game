@@ -34,7 +34,9 @@ String normalize(String input) {
       .replaceAll('ü', 'u')
       .replaceAll('ý', 'y')
       .replaceAll('ÿ', 'y');
-  return withoutAccents.replaceAll(RegExp(r'\s+'), ' ');
+  // Supprime les symboles de genre Pokémon
+  final withoutGender = withoutAccents.replaceAll(RegExp(r'[♂♀]'), '');
+  return withoutGender.replaceAll(RegExp(r'\s+'), ' ');
 }
 
 /// Exemple d'utilisation :
