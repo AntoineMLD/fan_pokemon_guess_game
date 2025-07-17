@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/pokemon_provider.dart';
 import 'solo_proposition_screen.dart';
+import 'duo_player_names_screen.dart';
 
 class AccueilScreen extends StatelessWidget {
   @override
@@ -40,6 +41,22 @@ class AccueilScreen extends StatelessWidget {
                   );
                 },
                 child: Text('SOLO'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF0075BE),
+                  foregroundColor: Color(0xFFFFCC00),
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  textStyle: TextStyle(fontSize: 18),
+                ),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => DuoPlayerNamesScreen()),
+                  );
+                },
+                child: Text('DUO'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF0075BE),
                   foregroundColor: Color(0xFFFFCC00),

@@ -87,7 +87,7 @@ lib/
 
 1. **Cloner le projet** :
    ```bash
-   git clone https://github.com/TON-UTILISATEUR/fan_pokemon_guess_game.git
+   git clone https://github.com/AntoineMLD/fan_pokemon_guess_game.git
    cd fan_pokemon_guess_game
    ```
 
