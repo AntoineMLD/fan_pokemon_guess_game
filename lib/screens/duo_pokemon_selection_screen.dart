@@ -33,9 +33,23 @@ class _DuoPokemonSelectionScreenState extends State<DuoPokemonSelectionScreen> {
   }
 
   Future<List<Pokemon>> _fetchRandomPokemons(int count) async {
-    final List<Pokemon> pokemons = [];
-    for (int i = 0; i < count; i++) {
-      pokemons.add(await PokemonService.fetchRandomPokemon());
+    final List<Future<Pokemon?>> futures = List.generate(count, (_) async {
+      try {
+        return await PokemonService.fetchRandomPokemon();
+      } catch (_) {
+        return null;
+      }
+    });
+    final results = await Future.wait(futures);
+    // Si certains sont null (erreur), on relance pour compléter jusqu'à 50
+    List<Pokemon> pokemons = results.whereType<Pokemon>().toList();
+    while (pokemons.length < count) {
+      try {
+        final p = await PokemonService.fetchRandomPokemon();
+        pokemons.add(p);
+      } catch (_) {
+        // ignore
+      }
     }
     return pokemons;
   }
