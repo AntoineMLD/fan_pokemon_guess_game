@@ -8,6 +8,16 @@
 
 ---
 
+## 🆕 Nouveautés majeures
+
+- **Mode Duo** : affrontez un ami, chacun choisit un Pokémon à faire deviner à l'autre, scores visibles, parties infinies, récapitulatif final.
+- **Sélection ultra-rapide** : affichage de 50 Pokémon aléatoires en vignettes grâce à des requêtes parallélisées.
+- **Stade d'évolution fiable** : l'indice "stade d'évolution" fonctionne pour tous les Pokémon (Bébé, Base, Intermédiaire, Finale), même pour les cas complexes.
+- **Validation tolérante** : la casse, les accents, les espaces, les symboles de genre (♂, ♀) et les variantes de nom sont ignorés lors de la validation.
+- **Expérience utilisateur fluide** : navigation claire, scores visibles, arrêt manuel possible, retour à l'accueil à tout moment.
+
+---
+
 ## 📖 Description
 
 Ce projet est un jeu de devinette pour les fans de Pokémon. Le but est de deviner le nom d'un Pokémon à partir de ses caractéristiques (type, couleur, région, etc.). L'application utilise l'API publique PokéAPI pour récupérer les données des Pokémon.
@@ -19,20 +29,32 @@ Ce projet est un jeu de devinette pour les fans de Pokémon. Le but est de devin
 ## 🎮 Fonctionnalités
 
 ### Mode Solo
-- **Devinez le Pokémon** : À partir d'indices révélés progressivement
-- **Indices disponibles** :
-  - Type(s) du Pokémon
-  - Couleur
-  - Région d'origine
-  - Taille (Petite/Grande)
-  - Poids
-  - Description
-  - Stade d'évolution
-  - Forme
-  - Statut légendaire
-- **Système d'essais** : 5 tentatives maximum
-- **Validation intelligente** : Ignore la casse et les accents
-- **Solution automatique** : Affichage du bon Pokémon après échec
+- Devinez le Pokémon à partir d'indices révélés progressivement
+- 5 essais maximum
+- Solution affichée en cas d'échec
+
+### Mode Duo
+- Deux joueurs, chacun choisit un Pokémon à faire deviner à l'autre
+- Sélection parmi 50 Pokémon aléatoires (sprites + noms)
+- 5 essais par manche, scores visibles en permanence
+- +10 points pour une bonne réponse, -2 points par mauvaise réponse
+- Rôles inversés à chaque manche, parties infinies jusqu'à arrêt manuel
+- Récapitulatif final avec tableau des scores et gagnant
+
+### Indices disponibles
+- Type(s) du Pokémon
+- Couleur
+- Région d'origine
+- Taille (Petite/Grande)
+- Poids
+- Description
+- **Stade d'évolution** (Bébé, Base, Intermédiaire, Finale)
+- Forme
+- Statut légendaire
+
+### Validation intelligente
+- Insensible à la casse, aux accents, aux espaces, aux symboles de genre (♂, ♀)
+- Les variantes de nom (ex : Nidoran, Mr. Mime, Farfetch’d) sont acceptées
 
 ### Interface
 - Design moderne avec les couleurs Pokémon (bleu #0075BE et jaune #FFCC00)
@@ -65,8 +87,12 @@ lib/
 ├── screens/
 │   ├── accueil_screen.dart  # Écran d'accueil
 │   ├── solo_screen.dart     # Écran du mode solo
-│   ├── solo_proposition_screen.dart # Interface de jeu
-│   └── solo_resultat_screen.dart   # Écran de résultat
+│   ├── solo_proposition_screen.dart # Interface de jeu solo
+│   ├── solo_resultat_screen.dart   # Écran de résultat solo
+│   ├── duo_player_names_screen.dart # Saisie des joueurs duo
+│   ├── duo_pokemon_selection_screen.dart # Sélection du Pokémon en duo
+│   ├── duo_guess_screen.dart # Devinette en duo
+│   └── duo_recap_screen.dart # Récapitulatif final duo
 ├── services/
 │   └── pokemon_service.dart # Service API et logique métier
 ├── utils/
@@ -128,38 +154,31 @@ lib/
 
 ### Démarrage
 1. Lancez l'application
-2. Cliquez sur le bouton "SOLO" sur l'écran d'accueil
-3. Le jeu charge automatiquement un Pokémon aléatoire
+2. Cliquez sur le bouton "SOLO" ou "DUO" sur l'écran d'accueil
+3. Suivez les instructions à l'écran
 
 ### Pendant le jeu
-1. **Posez des questions** en cliquant sur les boutons d'indices
-2. **Proposez une réponse** en tapant le nom du Pokémon
-3. **Validez** votre proposition
-4. **Continuez** jusqu'à trouver ou épuiser vos essais
+- Posez des questions en cliquant sur les boutons d'indices
+- Proposez une réponse en tapant le nom du Pokémon
+- Validez votre proposition
+- Continuez jusqu'à trouver ou épuiser vos essais
+- En duo, les rôles s'inversent à chaque manche
 
 ### Validation des réponses
 - **Insensible à la casse** : "pikachu", "PIKACHU", "Pikachu" sont acceptés
 - **Insensible aux accents** : "évoli", "evoli" sont acceptés pour "Évoli"
-- **Espaces ignorés** : "Mr. Mime" et "mr mime" sont équivalents
+- **Espaces et symboles ignorés** : "Nidoran", "Nidoran♂", "Nidoran♀" sont équivalents
+- **Variante de nom** : "Mr. Mime" et "mr mime" sont équivalents
 
 ---
 
 ## 🔧 Configuration
 
-### Variables d'environnement
 Aucune configuration requise. L'application utilise l'API publique PokéAPI.
-
-### Personnalisation
-Vous pouvez modifier :
-- Les couleurs dans `lib/screens/` (variables `Color(0xFF0075BE)` et `Color(0xFFFFCC00)`)
-- Le nombre d'essais dans `lib/screens/solo_proposition_screen.dart` (variable `_maxAttempts`)
-- Les traductions dans `lib/services/pokemon_service.dart` (maps `typeMap`, `colorMap`, etc.)
 
 ---
 
 ## 🐛 Dépannage
-
-### Problèmes courants
 
 **L'application ne se lance pas :**
 ```bash
@@ -191,14 +210,6 @@ Les contributions sont les bienvenues ! Pour contribuer :
 4. Push vers la branche (`git push origin feature/AmazingFeature`)
 5. Ouvrez une Pull Request
 
-### Idées d'amélioration
-- Mode multijoueur
-- Système de score
-- Plus de modes de jeu
-- Sauvegarde des parties
-- Thèmes visuels
-- Support de plus de langues
-
 ---
 
 ## 📄 Licence et mentions légales
@@ -220,17 +231,6 @@ Si un ayant droit souhaite la modification ou la suppression de ce projet, il pe
 - [PokéAPI](https://pokeapi.co/) pour les données et images
 - [Flutter](https://flutter.dev/) pour le framework
 - La communauté Pokémon pour l'inspiration
-
----
-
-
-
-## 📊 Statistiques
-
-- **Langage** : Dart 100%
-- **Framework** : Flutter
-- **API** : PokéAPI
-- **Compatibilité** : Linux, Windows, macOS, Web, Android, iOS
 
 ---
 
