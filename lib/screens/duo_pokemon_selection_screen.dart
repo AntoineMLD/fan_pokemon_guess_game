@@ -73,6 +73,10 @@ class _DuoPokemonSelectionScreenState extends State<DuoPokemonSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     final chooser = widget.isPlayer1Choosing ? widget.player1 : widget.player2;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    final crossAxisCount = isMobile ? 3 : 5;
+    final spriteSize = isMobile ? 90.0 : 60.0;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF0075BE),
@@ -108,7 +112,7 @@ class _DuoPokemonSelectionScreenState extends State<DuoPokemonSelectionScreen> {
                   final pokemons = snapshot.data!;
                   return GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 5,
+                      crossAxisCount: crossAxisCount,
                       childAspectRatio: 0.7,
                       crossAxisSpacing: 8,
                       mainAxisSpacing: 8,
@@ -125,8 +129,8 @@ class _DuoPokemonSelectionScreenState extends State<DuoPokemonSelectionScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               p.sprite.isNotEmpty
-                                  ? Image.network(p.sprite, width: 60, height: 60, fit: BoxFit.contain)
-                                  : SizedBox(width: 60, height: 60),
+                                  ? Image.network(p.sprite, width: spriteSize, height: spriteSize, fit: BoxFit.contain)
+                                  : SizedBox(width: spriteSize, height: spriteSize),
                               SizedBox(height: 8),
                               Text(p.name, textAlign: TextAlign.center, style: TextStyle(fontSize: 14)),
                             ],
