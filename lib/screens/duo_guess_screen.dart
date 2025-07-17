@@ -216,9 +216,16 @@ class _DuoGuessScreenState extends State<DuoGuessScreen> {
               Center(
                 child: Column(
                   children: [
-                    widget.pokemonToGuess.sprite.isNotEmpty
-                        ? Image.network(widget.pokemonToGuess.sprite, width: 120, height: 120)
-                        : SizedBox.shrink(),
+                    Builder(
+                      builder: (context) {
+                        final screenWidth = MediaQuery.of(context).size.width;
+                        final spriteSize = screenWidth * 0.6;
+                        final clampedSize = spriteSize.clamp(120.0, 300.0);
+                        return widget.pokemonToGuess.sprite.isNotEmpty
+                            ? Image.network(widget.pokemonToGuess.sprite, width: clampedSize, height: clampedSize)
+                            : SizedBox.shrink();
+                      },
+                    ),
                     SizedBox(height: 20),
                     Text(_found ? '🎉 Bravo ! C’était ${widget.pokemonToGuess.name} 🎉' : '😢 Dommage ! C’était ${widget.pokemonToGuess.name} 😢',
                         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold), textAlign: TextAlign.center),

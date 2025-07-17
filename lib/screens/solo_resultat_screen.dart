@@ -60,9 +60,16 @@ class SoloResultatScreen extends StatelessWidget {
 
               SizedBox(height: 20),
 
-              sprite.startsWith('http')
-                  ? Image.network(sprite, width: 200, height: 200)
-                  : Image.asset(sprite, width: 200, height: 200),
+              Builder(
+                builder: (context) {
+                  final screenWidth = MediaQuery.of(context).size.width;
+                  final spriteSize = screenWidth * 0.6;
+                  final clampedSize = spriteSize.clamp(120.0, 300.0);
+                  return sprite.startsWith('http')
+                      ? Image.network(sprite, width: clampedSize, height: clampedSize)
+                      : Image.asset(sprite, width: clampedSize, height: clampedSize);
+                },
+              ),
 
               SizedBox(height: 20),
 
