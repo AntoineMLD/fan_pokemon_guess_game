@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import '../models/pokemon.dart';
+import '../utils/string_utils.dart';
 
 class PokemonService {
   static const _baseUrl = 'https://pokeapi.co/api/v2';
@@ -75,31 +76,65 @@ class PokemonService {
       text.isNotEmpty ? text[0].toUpperCase() + text.substring(1) : text;
 
   static Future<String> _getEvolutionStage(String speciesUrl, String pokemonName) async {
-    if (speciesUrl.isEmpty) return 'Inconnu';
+    if (speciesUrl.isEmpty) {
+      return 'Base';
+    }
     final speciesResponse = await http.get(Uri.parse(speciesUrl));
-    if (speciesResponse.statusCode != 200) return 'Inconnu';
-
+    if (speciesResponse.statusCode != 200) {
+      return 'Base';
+    }
     final speciesData = json.decode(speciesResponse.body);
-    final evolutionUrl = speciesData['evolution_chain'] != null && speciesData['evolution_chain']['url'] != null
-        ? speciesData['evolution_chain']['url'] as String
-        : '';
-    if (evolutionUrl.isEmpty) return 'Inconnu';
-    final evolutionResponse = await http.get(Uri.parse(evolutionUrl));
-    if (evolutionResponse.statusCode != 200) return 'Inconnu';
 
-    final evolutionData = json.decode(evolutionResponse.body);
-    int stage = _findStageInChain(evolutionData['chain'], pokemonName.toLowerCase(), 1);
-    return stage == 0 ? 'Inconnu' : 'Stade $stage';
+    // 1. Si is_baby
+    if (speciesData['is_baby'] == true) {
+      return 'Bébé';
+    }
+
+    // 2. Si pas d'évolution précédente
+    if (speciesData['evolves_from_species'] == null) {
+      if (speciesData['evolution_chain'] != null && speciesData['evolution_chain']['url'] != null) {
+        final evolutionUrl = speciesData['evolution_chain']['url'] as String;
+        final evolutionResponse = await http.get(Uri.parse(evolutionUrl));
+        if (evolutionResponse.statusCode == 200) {
+          final evolutionData = json.decode(evolutionResponse.body);
+          if (_hasEvolvesTo(evolutionData['chain'], pokemonName)) {
+            return 'Base';
+          } else {
+            return 'Finale';
+          }
+        }
+      }
+      return 'Base';
+    } else {
+      // Il évolue d'un autre
+      if (speciesData['evolution_chain'] != null && speciesData['evolution_chain']['url'] != null) {
+        final evolutionUrl = speciesData['evolution_chain']['url'] as String;
+        final evolutionResponse = await http.get(Uri.parse(evolutionUrl));
+        if (evolutionResponse.statusCode == 200) {
+          final evolutionData = json.decode(evolutionResponse.body);
+          if (_hasEvolvesTo(evolutionData['chain'], pokemonName)) {
+            return 'Intermédiaire';
+          } else {
+            return 'Finale';
+          }
+        }
+      }
+      return 'Intermédiaire';
+    }
   }
 
-  static int _findStageInChain(Map<String, dynamic> node, String name, int currentStage) {
-    if (node['species']['name'] == name) return currentStage;
-    if (node['evolves_to'] == null) return 0;
-    for (var child in node['evolves_to']) {
-      int result = _findStageInChain(child, name, currentStage + 1);
-      if (result != 0) return result;
+  /// Retourne true si le Pokémon (name anglais) a des évolutions possibles dans la chaîne
+  static bool _hasEvolvesTo(Map<String, dynamic> node, String name) {
+    String normalizeApiName(String s) => normalize(s.replaceAll('-', '').replaceAll("'", '').replaceAll('.', ''));
+    if (normalizeApiName(node['species']['name']) == normalizeApiName(name)) {
+      return node['evolves_to'] != null && (node['evolves_to'] as List).isNotEmpty;
     }
-    return 0;
+    if (node['evolves_to'] != null) {
+      for (var child in node['evolves_to']) {
+        if (_hasEvolvesTo(child, name)) return true;
+      }
+    }
+    return false;
   }
 
   static Future<Pokemon> fetchRandomPokemon() async {
@@ -146,7 +181,7 @@ class PokemonService {
 
     final isLegendary = speciesData['is_legendary'] ?? false;
 
-    final stadeEvolution = await _getEvolutionStage(speciesData['url'] ?? '', data['name'] ?? name);
+    final stadeEvolution = await _getEvolutionStage('https://pokeapi.co/api/v2/pokemon-species/${data['name']}/', data['name'] ?? name);
 
     return Pokemon(
       name: name,
