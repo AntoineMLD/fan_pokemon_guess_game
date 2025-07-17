@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'duo_pokemon_selection_screen.dart';
 
 class DuoPlayerNamesScreen extends StatefulWidget {
   @override
@@ -14,7 +15,18 @@ class _DuoPlayerNamesScreenState extends State<DuoPlayerNamesScreen> {
     if (_formKey.currentState!.validate()) {
       final player1 = _player1Controller.text.trim();
       final player2 = _player2Controller.text.trim();
-      // TODO: Naviguer vers l'écran de sélection du Pokémon avec les noms
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => DuoPokemonSelectionScreen(
+            player1: player1,
+            player2: player2,
+            score1: 0,
+            score2: 0,
+            isPlayer1Choosing: true,
+          ),
+        ),
+      );
     }
   }
 
